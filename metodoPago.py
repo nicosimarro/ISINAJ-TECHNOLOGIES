@@ -19,7 +19,7 @@ def payment(request):
         "transactions": [{  
             "amount": {  
                 "total": "5.00",  
-                "currency": "USD"},  
+                "currency": "EUR"},  
                          "Descripción": "Esta es una prueba de pedido"}]})  
   
     if payment.create():  
@@ -36,7 +36,7 @@ def payment(request):
 def payment_execute(request):  
   
     PAGO PAGOTY.GET.GET ("PAGO PAGO") #   I  
-         PAYERID = SOLICITUD.GET.GET ("PAGADORIDAD") # ID de carga útil  
+    PAYERID = SOLICITUD.GET.GET ("PAGADORIDAD") # ID de carga útil  
   
     payment = paypalrestsdk.Payment.find(paymentid)  
   
