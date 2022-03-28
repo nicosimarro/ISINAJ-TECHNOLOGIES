@@ -10,10 +10,54 @@
 <div class="row">
   <div class="col-md-12">
     <div class="card">
-      <div class="card-header mb-5">
-        <h5 class="card-category">Black Table Heading</h5>
-        <h3 class="card-title">Created using Poppins Font Family</h3>
-      </div>
+      <form role="form" method="post" action="/twitter">
+
+        <div class="card-header mb-5">
+          <h5 class="card-category">Api Twitter</h5>
+          <h3 class="card-title">Busca los tweets sobre tu artista favorito</h3>
+        </div>
+
+        <div class="card-footer">
+          <button type="submit" name="twitter" class="btn btn-fill btn-primary">Buscar tweets</button>
+          
+        </div>
+        
+        <div class="card-body">
+
+          <div class="row">
+
+            <div class="col-md-3 px-md-1">
+              <div class="form-group">
+                <label>Buscar tweets de:</label>
+                <input class="form-control" id="tweets_twitter" name="artista" required="" type="text" value="">
+              </div>
+            </div>
+          </div>
+
+          <div class="typography-line">
+            <span>Tweets</span>
+            <blockquote>
+              <p class="blockquote blockquote-primary">
+                <small>
+                  - {{ artista }}
+                </small>
+                <br>
+                <br>
+                  {% for x in contenido %}
+                      {{ x['text'] }} <br><br><br>
+                  {% endfor %}
+                
+              </p>
+            </blockquote>
+          </div>
+
+
+        </div>
+
+        
+      </form>
+
+      <!--
       <div class="card-body">
         <div class="typography-line">
           <h1><span>Header 1</span>The Life of Black Dashboard </h1>
@@ -144,6 +188,10 @@
           <pre>1. #This is an example of preformatted text.<br/>2. #Here is another line of code</pre>
         </div>
       </div>
+      -->
+
+
+
     </div>
   </div>
 </div>
