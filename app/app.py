@@ -6,6 +6,8 @@ NAJ-Technologies
 
 # import Flask 
 # Flask modules
+import requests
+import json
 from flask   import render_template, request
 from jinja2  import TemplateNotFound
 
@@ -128,6 +130,45 @@ def getsecrets():
 
     return make_response(jsonify({"result":"carpe diem"}), 201)
 
+
+# PARA DEVOLVER TWEETS
+@app.route("/twitter", methods=['POST'])
+def twitter():
+    URI_API = 'https://api.twitter.com'
+
+    #ultimos tweets de un usuario
+    #user_uri = '/2/tweets/search/recent?query=from:IbaiLlanos'
+
+    #ultimos tweets de una busqueda
+    tweets_uri = '/2/tweets/search/recent'
+
+    artista = request.form.get("artista")
+
+    '''Buscar un tweets recientes'''
+    try:
+        parametros = {
+            'query' : artista
+        }
+        header = {
+            'Authorization': 'Bearer AAAAAAAAAAAAAAAAAAAAAC7qaAEAAAAACqCHqNLHGRybM6LTsp252Lo6rjQ%3DzXNnncdySA8L6wsZGu7e6fBfetpFVlwlIzpLAkhUr6upi9DP9S'
+        } 
+        response = requests.get(URI_API+tweets_uri, headers=header, params=parametros)
+        #if response.status_code == 200:
+        #    print(response.content.decode())
+        #else:
+        #    print(response.content.decode())
+    except requests.models.MissingSchema: #pragma: no cover
+        raise ServerError('Wrong URL format') from requests.models.MissingSchema
+
+    j = response.content.decode()
+    json_data = json.loads(j)
+    array_data = json_data['data']
+    #for x in array_data:
+    #    tweet = x
+
+
+    #return make_response(response.content.decode(), 201)
+    return render_template('/ui-twitter.html', artista=artista, contenido=array_data )
 
 # Helper - Extract current page name from request 
 def get_segment( request ): 
