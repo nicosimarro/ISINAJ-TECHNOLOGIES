@@ -12,11 +12,18 @@
     </div>
 
     <ul class="nav">
-      <li class="{% if 'Estadisticas' in segment %} active {% endif %}">
+      <li class="{% if 'Inicio' in segment %} active {% endif %}">
         <a href="/">
+          <i class="tim-icons icon-html5"></i>
+          <p>Inicio</p>
+        </a>
+      </li>
+      <li class="{% if 'Estadisticas' in segment %} active {% endif %}">
+        <a href="/estadisticas.html">
           <i class="tim-icons icon-chart-pie-36"></i>
           <p>Estadisticas</p>
         </a>
+      </li>
       <li class="{% if 'Perfil de Usuario' in segment %} active {% endif %}">
         <a href="/perfilusuario.html">
           <i class="tim-icons icon-single-02"></i>
