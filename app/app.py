@@ -10,16 +10,23 @@ import requests
 import json
 from flask   import render_template, request
 from jinja2  import TemplateNotFound
+import enum
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
+import spotipy.util as util
 
 from flask import Flask, jsonify, request, make_response
 from flask_sqlalchemy import SQLAlchemy
 import uuid
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
+import sys
+from string import Template
 import jwt
 from datetime import datetime, timedelta
 
 # Inject Flask magic
+
 app = Flask(__name__)
 
 # App Config - the minimal footprint
@@ -130,6 +137,53 @@ def getsecrets():
 
     return make_response(jsonify({"result":"carpe diem"}), 201)
 
+@app.route("/spotify", methods=['POST'])
+def spotify():
+    cid = '5ea48a8853c5458b8a8750ab7acf3b63'
+    secret = '0469eddbfe5e4543a2b4915f6b3e65c9'
+    username = 'najtechnologies'
+    redirect_uri = 'http://localhost:8080'
+    scope = 'user-top-read'
+    token = util.prompt_for_user_token(username,scope,cid,secret,redirect_uri)
+    sp = spotipy.Spotify(auth=token)
+    playlists=sp.current_user_playlists()
+    top='37i9dQZEVXbMDoHDwVN2tF'
+    
+    
+    data = ''
+    cont =0
+    while playlists:
+        for i, playlist in enumerate(playlists['items']):
+       
+            tracks=[]
+            result = sp.playlist_tracks(top, additional_types=['track'])
+        
+            tracks  =  result['items']
+      
+            while result['next']:
+                result = sp.next(result)
+                tracks.extend(result['items'])
+
+            for j in tracks:
+                cont +=1;
+                #print(cont, j['track']['name'],'//', j['track']['artists'][0]['name'])  
+                data+= '\n'+str(cont) +' '+ str(j['track']['name']) + ' // '+ str(j['track']['artists'][0]['name'] + ',')   
+                
+        
+          
+        if playlists['next']:
+            playlists = sp.next(playlists)
+        else:
+            playlists = None
+    
+    D=data.split(',')
+   
+    return render_template('/ui-spotify.html', mytitle='top 50 canciones más populares', contenido=D)
+            
+  
+    
+    
+    
 
 # PARA DEVOLVER TWEETS
 @app.route("/twitter", methods=['POST'])
