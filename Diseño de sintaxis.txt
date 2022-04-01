@@ -1,0 +1,7 @@
+
+cli : ejecutar | test
+ejecutar : EJECUTAR argumentosEjecucion
+test : TEST argumentosTest
+argumentosEjecucion : AUTOMATIZACION ([--TEST_0 | -T0])? hosts
+hosts : host hosts*
+host : DIRECCIÓN_IP
