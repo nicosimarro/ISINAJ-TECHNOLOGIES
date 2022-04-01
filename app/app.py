@@ -165,7 +165,7 @@ def spotify():
                 tracks.extend(result['items'])
 
             for j in tracks:
-                cont +=1;
+                cont +=1
                 #print(cont, j['track']['name'],'//', j['track']['artists'][0]['name'])  
                 data+= '\n'+str(cont) +' '+ str(j['track']['name']) + ' // '+ str(j['track']['artists'][0]['name'] + ',')   
                 
@@ -181,17 +181,12 @@ def spotify():
     return render_template('/ui-spotify.html', mytitle='top 50 canciones más populares', contenido=D)
             
   
-    
-    
-    
 
 # PARA DEVOLVER TWEETS
 @app.route("/twitter", methods=['POST'])
 def twitter():
     URI_API = 'https://api.twitter.com'
 
-    #ultimos tweets de un usuario
-    #user_uri = '/2/tweets/search/recent?query=from:IbaiLlanos'
 
     #ultimos tweets de una busqueda
     tweets_uri = '/2/tweets/search/recent'
@@ -207,22 +202,86 @@ def twitter():
             'Authorization': 'Bearer AAAAAAAAAAAAAAAAAAAAAC7qaAEAAAAACqCHqNLHGRybM6LTsp252Lo6rjQ%3DzXNnncdySA8L6wsZGu7e6fBfetpFVlwlIzpLAkhUr6upi9DP9S'
         } 
         response = requests.get(URI_API+tweets_uri, headers=header, params=parametros)
-        #if response.status_code == 200:
-        #    print(response.content.decode())
-        #else:
-        #    print(response.content.decode())
+
     except requests.models.MissingSchema: #pragma: no cover
         raise ServerError('Wrong URL format') from requests.models.MissingSchema
 
     j = response.content.decode()
     json_data = json.loads(j)
     array_data = json_data['data']
-    #for x in array_data:
-    #    tweet = x
+ 
 
-
-    #return make_response(response.content.decode(), 201)
     return render_template('/ui-twitter.html', artista=artista, contenido=array_data )
+
+@app.route("/red_social", methods=['POST'])
+def redSocial():
+    cid = '5ea48a8853c5458b8a8750ab7acf3b63'
+    secret = '0469eddbfe5e4543a2b4915f6b3e65c9'
+    username = 'najtechnologies'
+    redirect_uri = 'http://localhost:8080'
+    scope = 'user-top-read'
+    token = util.prompt_for_user_token(username,scope,cid,secret,redirect_uri)
+    sp = spotipy.Spotify(auth=token)
+    playlists=sp.current_user_playlists()
+    top='37i9dQZEVXbMDoHDwVN2tF'
+
+    URI_API = 'https://api.twitter.com'
+    #ultimos tweets de una busqueda
+    tweets_uri = '/2/tweets/search/recent'
+
+    data_spotify = ''
+    data_twitter = ''
+    cont =0
+    while playlists:
+        for i, playlist in enumerate(playlists['items']):
+       
+            tracks=[]
+            result = sp.playlist_tracks(top, additional_types=['track'])
+        
+            tracks  =  result['items']
+      
+            while result['next']:
+                result = sp.next(result)
+                tracks.extend(result['items'])
+
+            tweets = []
+
+            for j in tracks:
+                cont +=1
+                
+                parametros = {
+                    'query' : str(j['track']['name'])
+                }
+                header = {
+                    'Authorization': 'Bearer AAAAAAAAAAAAAAAAAAAAAC7qaAEAAAAACqCHqNLHGRybM6LTsp252Lo6rjQ%3DzXNnncdySA8L6wsZGu7e6fBfetpFVlwlIzpLAkhUr6upi9DP9S'
+                } 
+                response = requests.get(URI_API+tweets_uri, headers=header, params=parametros)
+
+                y = response.content.decode()
+                json_data = json.loads(y)
+                data_twitter = json_data['data']
+                
+                json_grande = []
+                for json_algo in data_twitter:
+                    json_algo['artist'] = str(j['track']['artists'][0]['name'])
+                    json_grande.append(json_algo)
+
+                tweets = tweets + json_grande
+
+
+                if cont == 3:
+                    break
+
+                
+        if playlists['next']:
+            playlists = sp.next(playlists)
+        else:
+            playlists = None
+
+   
+    return render_template('/ui-redsocial.html', contenido=tweets)
+
+
 
 # Helper - Extract current page name from request 
 def get_segment( request ): 
