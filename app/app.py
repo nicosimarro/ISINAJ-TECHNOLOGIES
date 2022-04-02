@@ -15,6 +15,16 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 import spotipy.util as util
 
+import pandas as pd
+from pydataset import data
+import re
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+from bokeh.io import output_notebook, show
+from bokeh.charts import Histogram, Scatter
+import folium
+
 from flask import Flask, jsonify, request, make_response
 from flask_sqlalchemy import SQLAlchemy
 import uuid
