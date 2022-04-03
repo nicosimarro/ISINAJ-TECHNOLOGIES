@@ -6,3 +6,8 @@ markupsafe==2.0.1
 PyJWT==1.7.1
 Flask-SQLAlchemy>=2.5
 spotipy
+pandas
+pydataset
+seaborn
+bokeh
+folium
