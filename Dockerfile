@@ -1,11 +1,9 @@
-FROM python:3.6
+FROM python:3.7
 
-ENV FLASK_APP run.py
-
-COPY run.py gunicorn-cfg.py requirements.txt ./
-COPY app app
-
+RUN mkdir /micro
+WORKDIR /micro
+ADD . /micro/
 RUN pip install -r requirements.txt
 
-EXPOSE 5005
-CMD ["gunicorn", "--config", "gunicorn-cfg.py", "run:app"]
+EXPOSE 5000
+CMD ["python", "/app/app.py"]
