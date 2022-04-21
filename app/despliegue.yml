@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: ISINAJ-service
+  name: isinaj-service
 spec:
   selector:
-    app: ISINAJ
+    app: isinaj
   ports:
   - protocol: "TCP"
     port: 6000
@@ -14,20 +14,20 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ISINAJ
+  name: isinaj
 spec:
   selector:
     matchLabels:
-      app: ISINAJ
+      app: isinaj
   replicas: 2
   template:
     metadata:
       labels:
-        app: ISINAJ
+        app: isinaj
     spec:
       containers:
-      - name: ISINAJ
-        image: ISINAJ:latest
+      - name: isinaj
+        image: isinaj:latest
         imagePullPolicy: Never
         ports:
         - containerPort: 5000
